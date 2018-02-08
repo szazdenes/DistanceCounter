@@ -2,6 +2,8 @@
 #define DISTANCEMEASUREMENTFORM_H
 
 #include <QWidget>
+#include <QFileDialog>
+#include <QGraphicsScene>
 
 namespace Ui {
 class DistanceMeasurementForm;
@@ -23,6 +25,11 @@ private slots:
 
 private:
     Ui::DistanceMeasurementForm *ui;
+
+    QImage loadImage, mask;
+    QGraphicsScene scene;
+
+    void refreshMask();
 };
 
 #endif // DISTANCEMEASUREMENTFORM_H
