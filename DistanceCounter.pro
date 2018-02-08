@@ -32,14 +32,17 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     analizationform.cpp \
-    distancemeasurementform.cpp
+    distancemeasurementform.cpp \
+    imagegraphicsviewform.cpp
 
 HEADERS += \
         mainwindow.h \
     analizationform.h \
-    distancemeasurementform.h
+    distancemeasurementform.h \
+    imagegraphicsviewform.h
 
 FORMS += \
         mainwindow.ui \
     analizationform.ui \
-    distancemeasurementform.ui
+    distancemeasurementform.ui \
+    imagegraphicsviewform.ui

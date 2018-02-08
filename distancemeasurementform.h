@@ -15,6 +15,12 @@ public:
     explicit DistanceMeasurementForm(QWidget *parent = 0);
     ~DistanceMeasurementForm();
 
+signals:
+    void signalClearDistanceDataList();
+
+private slots:
+    void on_pushButton_clicked();
+
 private:
     Ui::DistanceMeasurementForm *ui;
 };

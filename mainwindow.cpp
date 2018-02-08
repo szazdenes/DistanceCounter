@@ -6,6 +6,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    connect(ui->distanceMeasurementWidget, &DistanceMeasurementForm::signalClearDistanceDataList, ui->analizationWidget, &AnalizationForm::slotClearDistanceData);
 }
 
 MainWindow::~MainWindow()

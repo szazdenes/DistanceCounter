@@ -12,3 +12,8 @@ DistanceMeasurementForm::~DistanceMeasurementForm()
 {
     delete ui;
 }
+
+void DistanceMeasurementForm::on_pushButton_clicked()
+{
+    emit signalClearDistanceDataList();
+}
