@@ -17,6 +17,16 @@ AnalizationForm::~AnalizationForm()
     delete ui;
 }
 
+void AnalizationForm::slotAddDistanceData(double data)
+{
+    distanceDataList.append(data);
+}
+
+void AnalizationForm::slotClearDistanceData()
+{
+    distanceDataList.clear();
+}
+
 void AnalizationForm::calculateAveStD()
 {
     if(ui->tableWidget->rowCount() > 0){
@@ -34,9 +44,8 @@ void AnalizationForm::calculateAveStD()
         ui->tableWidget->setVerticalHeaderItem(ui->tableWidget->rowCount()-1, new QTableWidgetItem(QString("StD")));
         ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, 0, new QTableWidgetItem(QString::number(StD)));
     }
-    else{
+    else
         return;
-    }
 }
 
 double AnalizationForm::getAverage(QList<double> &list)
@@ -55,4 +64,18 @@ double AnalizationForm::getStd(QList<double> &list)
         result += (((double)list.at(i) - average)*((double)list.at(i) - average)) / (double)list.size();
     result = qSqrt(result);
     return result;
+}
+
+void AnalizationForm::refreshTableWidget()
+{
+    if(!distanceDataList.isEmpty()){
+        ui->tableWidget->clear();
+        foreach(double currentItem, distanceDataList){
+            ui->tableWidget->insertRow(ui->tableWidget->rowCount());
+            ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, 0, new QTableWidgetItem(QString::number(currentItem)));
+        }
+        calculateAveStD();
+    }
+    else
+        return;
 }

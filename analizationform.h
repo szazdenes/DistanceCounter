@@ -17,6 +17,8 @@ public:
     ~AnalizationForm();
 
 public slots:
+    void slotAddDistanceData(double data);
+    void slotClearDistanceData();
 
 
 private:
@@ -25,6 +27,9 @@ private:
     void calculateAveStD();
     double getAverage(QList<double> &list);
     double getStd(QList<double> &list);
+    void refreshTableWidget();
+
+    QList<double> distanceDataList;
 };
 
 #endif // ANALIZATIONFORM_H
