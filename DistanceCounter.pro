@@ -30,10 +30,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    analizationform.cpp \
+    distancemeasurementform.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    analizationform.h \
+    distancemeasurementform.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    analizationform.ui \
+    distancemeasurementform.ui
