@@ -2,6 +2,7 @@
 #define ANALIZATIONFORM_H
 
 #include <QWidget>
+#include <QtMath>
 
 namespace Ui {
 class AnalizationForm;
@@ -15,8 +16,15 @@ public:
     explicit AnalizationForm(QWidget *parent = 0);
     ~AnalizationForm();
 
+public slots:
+
+
 private:
     Ui::AnalizationForm *ui;
+
+    void calculateAveStD();
+    double getAverage(QList<double> &list);
+    double getStd(QList<double> &list);
 };
 
 #endif // ANALIZATIONFORM_H
