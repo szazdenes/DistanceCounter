@@ -5,6 +5,7 @@
 #include <QFileDialog>
 #include <QGraphicsScene>
 #include <QtMath>
+#include <QToolTip>
 
 namespace Ui {
 class DistanceMeasurementForm;
