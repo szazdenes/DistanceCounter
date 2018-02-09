@@ -19,10 +19,12 @@ public:
 
     void mousePressEvent(QMouseEvent* event);
     void mouseReleaseEvent(QMouseEvent* event);
+    void mouseMoveEvent(QMouseEvent *event);
 
 signals:
     void signalLeftButtonPressed(QPointF pos);
     void signalLeftButtonReleased(QPointF pos);
+    void signalMouseMoved(QPointF pos);
 
 private:
     Ui::ImageGraphicsViewForm *ui;

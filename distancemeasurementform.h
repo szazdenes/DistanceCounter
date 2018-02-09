@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QFileDialog>
 #include <QGraphicsScene>
+#include <QtMath>
 
 namespace Ui {
 class DistanceMeasurementForm;
@@ -19,17 +20,30 @@ public:
 
 signals:
     void signalClearDistanceDataList();
+    void signalSendDistance(double distance);
 
 private slots:
     void on_pushButton_clicked();
+    void slotMouseMoved(QPointF pos);
+    void slotMouseButtonPressed(QPointF pos);
+    void slotMouseButtonReleased(QPointF pos);
+
+    void on_clearPushButton_clicked();
+
+    void on_savePushButton_clicked();
 
 private:
     Ui::DistanceMeasurementForm *ui;
 
-    QImage loadImage, mask;
+    QImage *loadImage, *mask, *image;
     QGraphicsScene scene;
+    QPointF startPosition;
+    bool mousePressed;
 
     void refreshMask();
+    void refreshImage();
+    void refreshLine(QPointF &startPos, QPointF &endPos);
+    double calculateDistance(QPointF &startPos, QPointF &endPos);
 };
 
 #endif // DISTANCEMEASUREMENTFORM_H

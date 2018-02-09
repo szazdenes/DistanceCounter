@@ -28,3 +28,8 @@ void ImageGraphicsViewForm::mouseReleaseEvent(QMouseEvent *event)
     else
         QGraphicsView::mouseReleaseEvent(event);
 }
+
+void ImageGraphicsViewForm::mouseMoveEvent(QMouseEvent *event)
+{
+    emit signalMouseMoved(mapToScene(event->pos()));
+}
