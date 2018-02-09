@@ -79,3 +79,34 @@ void AnalizationForm::refreshTableWidget()
     else
         return;
 }
+
+void AnalizationForm::exportTableData(QString exportFilename)
+{
+    QFile exportFile(exportFilename);
+    if(!exportFile.fileName().endsWith(".csv"))
+        exportFile.setFileName(exportFile.fileName() + ".csv");
+    if(!exportFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qDebug("baj");
+        return;
+    }
+
+    QTextStream out(&exportFile);
+    out << "#" << ui->tableWidget->horizontalHeaderItem(0)->text() << "\n";
+
+    for(int i = 0; i < ui->tableWidget->rowCount(); i++){
+        out << ui->tableWidget->item(i, 0)->text() << "\n";
+    }
+
+    exportFile.close();
+}
+
+void AnalizationForm::on_clearPushButton_clicked()
+{
+    ui->tableWidget->clear();
+}
+
+void AnalizationForm::on_exportPushButton_clicked()
+{
+    QString outFileName = QFileDialog::getSaveFileName(this, "Save table", "../");
+    exportTableData(outFileName);
+}

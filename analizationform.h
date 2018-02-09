@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include <QtMath>
+#include <QFileDialog>
+#include <QTextStream>
 
 namespace Ui {
 class AnalizationForm;
@@ -21,6 +23,11 @@ public slots:
     void slotClearDistanceData();
 
 
+private slots:
+    void on_clearPushButton_clicked();
+
+    void on_exportPushButton_clicked();
+
 private:
     Ui::AnalizationForm *ui;
 
@@ -28,6 +35,7 @@ private:
     double getAverage(QList<double> &list);
     double getStd(QList<double> &list);
     void refreshTableWidget();
+    void exportTableData(QString exportFilename);
 
     QList<double> distanceDataList;
 };
