@@ -36,7 +36,7 @@ private slots:
 private:
     Ui::DistanceMeasurementForm *ui;
 
-    QImage *loadImage, *mask, *image;
+    QImage loadImage, mask, image, originalImage;
     QGraphicsScene scene;
     QPointF startPosition;
     bool mousePressed;

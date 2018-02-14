@@ -19,9 +19,9 @@ DistanceMeasurementForm::DistanceMeasurementForm(QWidget *parent) :
 
 DistanceMeasurementForm::~DistanceMeasurementForm()
 {
-    delete loadImage;
-    delete mask;
-    delete image;
+//    delete loadImage;
+//    delete mask;
+//    delete image;
     delete ui;
 }
 
@@ -29,9 +29,10 @@ void DistanceMeasurementForm::on_pushButton_clicked()
 {
     emit signalClearDistanceDataList();
     QString imagePath = QFileDialog::getOpenFileName(this, "Open image", "../");
-    loadImage = new QImage(imagePath);
-    image = new QImage(*loadImage);
-    mask = new QImage(loadImage->width(), loadImage->height(), QImage::Format_ARGB32_Premultiplied);
+    loadImage = QImage(imagePath);
+    image = QImage(loadImage);
+    originalImage = QImage(loadImage);
+    mask = QImage(loadImage.width(), loadImage.height(), QImage::Format_ARGB32_Premultiplied);
     refreshMask();
     refreshImage();
 }
@@ -67,32 +68,32 @@ void DistanceMeasurementForm::slotMouseButtonReleased(QPointF pos)
 
 void DistanceMeasurementForm::refreshMask()
 {
-    mask->fill(Qt::transparent);
+    mask.fill(Qt::transparent);
 }
 
 void DistanceMeasurementForm::refreshImage()
 {
-    QPainter painter(image);
-    QPainter painter2(loadImage);
+    QPainter painter(&image);
+    QPainter painter2(&loadImage);
 
     if(mousePressed){
-        painter.drawImage(0, 0, *loadImage);
-        painter.drawImage(0, 0, *mask);
+        painter.drawImage(0, 0, loadImage);
+        painter.drawImage(0, 0, mask);
         painter.end();
         scene.clear();
-        scene.addPixmap(QPixmap::fromImage(*image));
+        scene.addPixmap(QPixmap::fromImage(image));
     }
     else{
-        painter2.drawImage(0,0, *image);
+        painter2.drawImage(0,0, image);
         painter2.end();
         scene.clear();
-        scene.addPixmap(QPixmap::fromImage(*image));
+        scene.addPixmap(QPixmap::fromImage(image));
     }
 }
 
 void DistanceMeasurementForm::refreshLine(QPointF &startPos, QPointF &endPos)
 {
-    QPainter painter(mask);
+    QPainter painter(&mask);
     QPen pen;
     pen.setColor(Qt::yellow);
     pen.setWidth(1);
@@ -111,14 +112,15 @@ double DistanceMeasurementForm::calculateDistance(QPointF &startPos, QPointF &en
 void DistanceMeasurementForm::on_clearPushButton_clicked()
 {
     refreshMask();
+    image = originalImage;
     refreshImage();
 }
 
 void DistanceMeasurementForm::on_savePushButton_clicked()
 {
-    if(!image->isNull()){
+    if(!image.isNull()){
         QString saveName = QFileDialog::getSaveFileName(this, "Save image", "../");
         if(!saveName.endsWith(".png")) saveName.append(".png");
-        image->save(saveName);
+        image.save(saveName);
     }
 }
