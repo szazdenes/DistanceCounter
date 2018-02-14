@@ -104,8 +104,7 @@ void DistanceMeasurementForm::refreshLine(QPointF &startPos, QPointF &endPos)
 
 double DistanceMeasurementForm::calculateDistance(QPointF &startPos, QPointF &endPos)
 {
-    /*some error in the calculation, needs to test*/
-    double result = qSqrt((endPos.x()-startPos.x())*(endPos.x()-startPos.x())-(endPos.y()-startPos.y())*(endPos.y()-startPos.y()));
+    double result = qSqrt((endPos.x()-startPos.x())*(endPos.x()-startPos.x())+(endPos.y()-startPos.y())*(endPos.y()-startPos.y()));
     return result;
 }
 
