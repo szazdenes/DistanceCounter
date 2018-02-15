@@ -33,16 +33,19 @@ SOURCES += \
         mainwindow.cpp \
     analizationform.cpp \
     distancemeasurementform.cpp \
-    imagegraphicsviewform.cpp
+    imagegraphicsviewform.cpp \
+    calibrationdialog.cpp
 
 HEADERS += \
         mainwindow.h \
     analizationform.h \
     distancemeasurementform.h \
-    imagegraphicsviewform.h
+    imagegraphicsviewform.h \
+    calibrationdialog.h
 
 FORMS += \
         mainwindow.ui \
     analizationform.ui \
     distancemeasurementform.ui \
-    imagegraphicsviewform.ui
+    imagegraphicsviewform.ui \
+    calibrationdialog.ui

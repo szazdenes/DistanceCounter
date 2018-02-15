@@ -15,6 +15,15 @@ DistanceMeasurementForm::DistanceMeasurementForm(QWidget *parent) :
     ui->graphicsView->setTransformationAnchor(QGraphicsView::AnchorViewCenter);
 
     mousePressed = false;
+    calibration = false;
+
+    calibValue = 1;
+
+
+
+    ui->clearPushButton->setDisabled(true);
+    ui->pushButton->setDisabled(true);
+    ui->savePushButton->setDisabled(true);
 }
 
 DistanceMeasurementForm::~DistanceMeasurementForm()
@@ -60,7 +69,21 @@ void DistanceMeasurementForm::slotMouseButtonReleased(QPointF pos)
     refreshLine(startPosition, pos);
     refreshImage();
     double distance = calculateDistance(startPosition, pos);
-    emit signalSendDistance(distance);
+    if(calibration) emit signalSendDistance(distance);
+    if(!calibration){
+        CalibrationDialog calibDialog(this, distance);
+        connect(&calibDialog, &CalibrationDialog::signalSendCalibrationValue, this, &DistanceMeasurementForm::slotSetCalibrationValue);
+        calibDialog.exec();
+    }
+}
+
+void DistanceMeasurementForm::slotSetCalibrationValue(double calib)
+{
+    calibValue = calib;
+    calibration = true;
+    ui->pushButton->setEnabled(true);
+    ui->clearPushButton->setEnabled(true);
+    ui->savePushButton->setEnabled(true);
 }
 
 void DistanceMeasurementForm::refreshMask()
@@ -101,7 +124,7 @@ void DistanceMeasurementForm::refreshLine(QPointF &startPos, QPointF &endPos)
 
 double DistanceMeasurementForm::calculateDistance(QPointF &startPos, QPointF &endPos)
 {
-    double result = qSqrt((endPos.x()-startPos.x())*(endPos.x()-startPos.x())+(endPos.y()-startPos.y())*(endPos.y()-startPos.y()));
+    double result = calibValue * qSqrt((endPos.x()-startPos.x())*(endPos.x()-startPos.x())+(endPos.y()-startPos.y())*(endPos.y()-startPos.y()));
     return result;
 }
 
@@ -119,4 +142,17 @@ void DistanceMeasurementForm::on_savePushButton_clicked()
         if(!saveName.endsWith(".png")) saveName.append(".png");
         image.save(saveName);
     }
+}
+
+void DistanceMeasurementForm::on_calibrationPushButton_clicked()
+{
+    calibration = false;
+    calibValue = 1;
+    QString imagePath = QFileDialog::getOpenFileName(this, "Open image", "../");
+    loadImage = QImage(imagePath);
+    image = QImage(loadImage);
+    originalImage = QImage(loadImage);
+    mask = QImage(loadImage.width(), loadImage.height(), QImage::Format_ARGB32_Premultiplied);
+    refreshMask();
+    refreshImage();
 }

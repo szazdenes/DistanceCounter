@@ -7,6 +7,8 @@
 #include <QtMath>
 #include <QToolTip>
 
+#include "calibrationdialog.h"
+
 namespace Ui {
 class DistanceMeasurementForm;
 }
@@ -28,10 +30,13 @@ private slots:
     void slotMouseMoved(QPointF pos);
     void slotMouseButtonPressed(QPointF pos);
     void slotMouseButtonReleased(QPointF pos);
+    void slotSetCalibrationValue(double calib);
 
     void on_clearPushButton_clicked();
 
     void on_savePushButton_clicked();
+
+    void on_calibrationPushButton_clicked();
 
 private:
     Ui::DistanceMeasurementForm *ui;
@@ -40,6 +45,8 @@ private:
     QGraphicsScene scene;
     QPointF startPosition;
     bool mousePressed;
+    double calibValue;
+    bool calibration;
 
     void refreshMask();
     void refreshImage();
