@@ -5,6 +5,7 @@
 #include <QtMath>
 #include <QFileDialog>
 #include <QTextStream>
+#include <QDebug>
 
 namespace Ui {
 class AnalizationForm;
@@ -33,7 +34,7 @@ private:
 
     void calculateAveStD();
     double getAverage(QList<double> &list);
-    double getStd(QList<double> &list);
+    double getStd(QList<double> &list, double average);
     void refreshTableWidget();
     void exportTableData(QString exportFilename);
     void tableSetHeader();

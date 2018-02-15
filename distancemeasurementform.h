@@ -38,6 +38,10 @@ private slots:
 
     void on_calibrationPushButton_clicked();
 
+    void on_fitPushButton_clicked();
+
+    void on_originalPushButton_clicked();
+
 private:
     Ui::DistanceMeasurementForm *ui;
 
@@ -47,6 +51,7 @@ private:
     bool mousePressed;
     double calibValue;
     bool calibration;
+    double zoom;
 
     void refreshMask();
     void refreshImage();

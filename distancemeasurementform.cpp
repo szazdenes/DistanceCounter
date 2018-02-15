@@ -18,8 +18,7 @@ DistanceMeasurementForm::DistanceMeasurementForm(QWidget *parent) :
     calibration = false;
 
     calibValue = 1;
-
-
+    zoom = 1;
 
     ui->clearPushButton->setDisabled(true);
     ui->pushButton->setDisabled(true);
@@ -115,8 +114,8 @@ void DistanceMeasurementForm::refreshLine(QPointF &startPos, QPointF &endPos)
 {
     QPainter painter(&mask);
     QPen pen;
-    pen.setColor(Qt::yellow);
-    pen.setWidth(1);
+    pen.setColor(Qt::red);
+    pen.setWidth(2);
     painter.setPen(pen);
     painter.drawLine(startPos, endPos);
     painter.end();
@@ -155,4 +154,22 @@ void DistanceMeasurementForm::on_calibrationPushButton_clicked()
     mask = QImage(loadImage.width(), loadImage.height(), QImage::Format_ARGB32_Premultiplied);
     refreshMask();
     refreshImage();
+}
+
+void DistanceMeasurementForm::on_fitPushButton_clicked()
+{
+    ui->graphicsView->scale(1.0/zoom, 1.0/zoom);
+
+    QRectF imageRect = image.rect();
+    QRectF rect = ui->graphicsView->viewport()->rect();
+    double fitSize = qMin<double>(rect.width() / imageRect.width(), rect.height() / imageRect.height());
+
+    ui->graphicsView->scale(fitSize, fitSize);
+    zoom = fitSize;
+}
+
+void DistanceMeasurementForm::on_originalPushButton_clicked()
+{
+    ui->graphicsView->scale(1.0/zoom, 1.0/zoom);
+    zoom = 1;
 }
