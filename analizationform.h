@@ -36,6 +36,7 @@ private:
     double getStd(QList<double> &list);
     void refreshTableWidget();
     void exportTableData(QString exportFilename);
+    void tableSetHeader();
 
     QList<double> distanceDataList;
 };

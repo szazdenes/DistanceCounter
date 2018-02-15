@@ -19,9 +19,6 @@ DistanceMeasurementForm::DistanceMeasurementForm(QWidget *parent) :
 
 DistanceMeasurementForm::~DistanceMeasurementForm()
 {
-//    delete loadImage;
-//    delete mask;
-//    delete image;
     delete ui;
 }
 

@@ -7,9 +7,8 @@ AnalizationForm::AnalizationForm(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    ui->tableWidget->setHorizontalHeaderLabels(QStringList() << "Distance (mm)");
-
+    distanceDataList.clear();
+    tableSetHeader();
 }
 
 AnalizationForm::~AnalizationForm()
@@ -20,11 +19,15 @@ AnalizationForm::~AnalizationForm()
 void AnalizationForm::slotAddDistanceData(double data)
 {
     distanceDataList.append(data);
+    refreshTableWidget();
 }
 
 void AnalizationForm::slotClearDistanceData()
 {
     distanceDataList.clear();
+    ui->tableWidget->clear();
+    ui->tableWidget->setRowCount(0);
+    tableSetHeader();
 }
 
 void AnalizationForm::calculateAveStD()
@@ -70,6 +73,8 @@ void AnalizationForm::refreshTableWidget()
 {
     if(!distanceDataList.isEmpty()){
         ui->tableWidget->clear();
+        ui->tableWidget->setRowCount(0);
+        tableSetHeader();
         foreach(double currentItem, distanceDataList){
             ui->tableWidget->insertRow(ui->tableWidget->rowCount());
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, 0, new QTableWidgetItem(QString::number(currentItem)));
@@ -93,16 +98,24 @@ void AnalizationForm::exportTableData(QString exportFilename)
     QTextStream out(&exportFile);
     out << "#" << ui->tableWidget->horizontalHeaderItem(0)->text() << "\n";
 
-    for(int i = 0; i < ui->tableWidget->rowCount(); i++){
+    for(int i = 0; i < ui->tableWidget->rowCount()-2; i++){
         out << ui->tableWidget->item(i, 0)->text() << "\n";
     }
+    out << "Average:" << "\t" << ui->tableWidget->item(ui->tableWidget->rowCount()-2, 0)->text() << "\n";
+    out << "StD:" << "\t" << ui->tableWidget->item(ui->tableWidget->rowCount()-1, 0)->text();
 
     exportFile.close();
 }
 
+void AnalizationForm::tableSetHeader()
+{
+    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableWidget->setHorizontalHeaderLabels(QStringList() << "Distance (um)");
+}
+
 void AnalizationForm::on_clearPushButton_clicked()
 {
-    ui->tableWidget->clear();
+    slotClearDistanceData();
 }
 
 void AnalizationForm::on_exportPushButton_clicked()
