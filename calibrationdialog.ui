@@ -30,7 +30,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Reference value (um):</string>
+      <string>Reference value (mm):</string>
      </property>
     </widget>
    </item>

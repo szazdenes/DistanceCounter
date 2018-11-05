@@ -56,7 +56,7 @@ void DistanceMeasurementForm::slotMouseMoved(QPointF pos)
             refreshLine(startPosition, pos);
             refreshImage();
             double distance = calculateDistance(startPosition, pos);
-            QToolTip::showText(QCursor::pos(), QString::number(distance) + " um", ui->graphicsView);
+            QToolTip::showText(QCursor::pos(), QString::number(distance) + " mm", ui->graphicsView);
         }
         if(ui->areaRadioButton->isChecked()){
             refreshArea(pos);
