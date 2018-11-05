@@ -14,17 +14,20 @@ class ImageGraphicsViewForm : public QGraphicsView
     Q_OBJECT
 
 public:
-    explicit ImageGraphicsViewForm(QWidget *parent = 0);
+    explicit ImageGraphicsViewForm(QWidget *parent = nullptr);
     ~ImageGraphicsViewForm();
 
     void mousePressEvent(QMouseEvent* event);
     void mouseReleaseEvent(QMouseEvent* event);
     void mouseMoveEvent(QMouseEvent *event);
+    void wheelEvent(QWheelEvent *event);
 
 signals:
     void signalLeftButtonPressed(QPointF pos);
     void signalLeftButtonReleased(QPointF pos);
     void signalMouseMoved(QPointF pos);
+    void signalWheelUp();
+    void signalWheelDown();
 
 private:
     Ui::ImageGraphicsViewForm *ui;

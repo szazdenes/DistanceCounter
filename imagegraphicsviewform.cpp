@@ -33,3 +33,13 @@ void ImageGraphicsViewForm::mouseMoveEvent(QMouseEvent *event)
 {
     emit signalMouseMoved(mapToScene(event->pos()));
 }
+
+void ImageGraphicsViewForm::wheelEvent(QWheelEvent *event)
+{
+    if(event->delta() > 0)
+        emit signalWheelUp();
+    if(event->delta() < 0)
+        emit signalWheelDown();
+    else
+        QGraphicsView::wheelEvent(event);
+}

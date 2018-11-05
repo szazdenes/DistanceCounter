@@ -10,6 +10,8 @@ DistanceMeasurementForm::DistanceMeasurementForm(QWidget *parent) :
     connect(ui->graphicsView, &ImageGraphicsViewForm::signalMouseMoved, this, &DistanceMeasurementForm::slotMouseMoved);
     connect(ui->graphicsView, &ImageGraphicsViewForm::signalLeftButtonPressed, this, &DistanceMeasurementForm::slotMouseButtonPressed);
     connect(ui->graphicsView, &ImageGraphicsViewForm::signalLeftButtonReleased, this, &DistanceMeasurementForm::slotMouseButtonReleased);
+    connect(ui->graphicsView, &ImageGraphicsViewForm::signalWheelUp, this, &DistanceMeasurementForm::slotWheelUp);
+    connect(ui->graphicsView, &ImageGraphicsViewForm::signalWheelDown, this, &DistanceMeasurementForm::slotWheelDown);
 
     ui->graphicsView->setScene(&scene);
     ui->graphicsView->setTransformationAnchor(QGraphicsView::AnchorViewCenter);
@@ -20,9 +22,13 @@ DistanceMeasurementForm::DistanceMeasurementForm(QWidget *parent) :
     calibValue = 1;
     zoom = 1;
 
+    pensize = 50;
+
     ui->clearPushButton->setDisabled(true);
     ui->pushButton->setDisabled(true);
     ui->savePushButton->setDisabled(true);
+    ui->distanceRadioButton->setChecked(true);
+    ui->areaRadioButton->setDisabled(true);
 }
 
 DistanceMeasurementForm::~DistanceMeasurementForm()
@@ -45,11 +51,17 @@ void DistanceMeasurementForm::on_pushButton_clicked()
 void DistanceMeasurementForm::slotMouseMoved(QPointF pos)
 {
     if(mousePressed){
-        refreshMask();
-        refreshLine(startPosition, pos);
-        refreshImage();
-        double distance = calculateDistance(startPosition, pos);
-        QToolTip::showText(QCursor::pos(), QString::number(distance) + " um", ui->graphicsView);
+        if(ui->distanceRadioButton->isChecked()){
+            refreshMask();
+            refreshLine(startPosition, pos);
+            refreshImage();
+            double distance = calculateDistance(startPosition, pos);
+            QToolTip::showText(QCursor::pos(), QString::number(distance) + " um", ui->graphicsView);
+        }
+        if(ui->areaRadioButton->isChecked()){
+            refreshArea(pos);
+            refreshImage();
+        }
     }
     else
         return;
@@ -64,15 +76,17 @@ void DistanceMeasurementForm::slotMouseButtonPressed(QPointF pos)
 void DistanceMeasurementForm::slotMouseButtonReleased(QPointF pos)
 {
     mousePressed = false;
-    refreshMask();
-    refreshLine(startPosition, pos);
-    refreshImage();
-    double distance = calculateDistance(startPosition, pos);
-    if(calibration) emit signalSendDistance(distance);
-    if(!calibration){
-        CalibrationDialog calibDialog(this, distance);
-        connect(&calibDialog, &CalibrationDialog::signalSendCalibrationValue, this, &DistanceMeasurementForm::slotSetCalibrationValue);
-        calibDialog.exec();
+    if(ui->distanceRadioButton->isChecked()){
+        refreshMask();
+        refreshLine(startPosition, pos);
+        refreshImage();
+        double distance = calculateDistance(startPosition, pos);
+        if(calibration) emit signalSendDistance(distance);
+        if(!calibration){
+            CalibrationDialog calibDialog(this, distance);
+            connect(&calibDialog, &CalibrationDialog::signalSendCalibrationValue, this, &DistanceMeasurementForm::slotSetCalibrationValue);
+            calibDialog.exec();
+        }
     }
 }
 
@@ -83,6 +97,19 @@ void DistanceMeasurementForm::slotSetCalibrationValue(double calib)
     ui->pushButton->setEnabled(true);
     ui->clearPushButton->setEnabled(true);
     ui->savePushButton->setEnabled(true);
+    ui->areaRadioButton->setEnabled(true);
+}
+
+void DistanceMeasurementForm::slotWheelUp()
+{
+    pensize += 5;
+    setCursorImage(pensize);
+}
+
+void DistanceMeasurementForm::slotWheelDown()
+{
+    pensize -= 5;
+    setCursorImage(pensize);
 }
 
 void DistanceMeasurementForm::refreshMask()
@@ -121,10 +148,41 @@ void DistanceMeasurementForm::refreshLine(QPointF &startPos, QPointF &endPos)
     painter.end();
 }
 
+void DistanceMeasurementForm::refreshArea(QPointF &pos)
+{
+    QPainter painter(&mask);
+    QBrush brush;
+    brush.setColor(Qt::yellow);
+    brush.setStyle(Qt::SolidPattern);
+    painter.setCompositionMode(QPainter::CompositionMode_Source);
+    painter.setOpacity(0.5);
+    painter.setBrush(brush);
+    painter.setPen(Qt::NoPen);
+    painter.drawEllipse(pos.x() - pensize/zoom/2.0, pos.y() - pensize/zoom/2.0, pensize/zoom, pensize/zoom);
+    painter.end();
+}
+
 double DistanceMeasurementForm::calculateDistance(QPointF &startPos, QPointF &endPos)
 {
     double result = calibValue * qSqrt((endPos.x()-startPos.x())*(endPos.x()-startPos.x())+(endPos.y()-startPos.y())*(endPos.y()-startPos.y()));
     return result;
+}
+
+void DistanceMeasurementForm::setCursorImage(double size)
+{
+    if(ui->areaRadioButton->isChecked()){
+        QImage cursorImage = QImage(size, size, QImage::Format_ARGB32);
+        QPainter cursorPainter(&cursorImage);
+        cursorPainter.setCompositionMode(QPainter::CompositionMode_Source);
+        cursorPainter.fillRect(cursorImage.rect(), Qt::transparent);
+        cursorPainter.setPen(Qt::yellow);
+        cursorPainter.drawEllipse(0, 0, size, size);
+        cursorPainter.end();
+        cursor = QCursor(QPixmap::fromImage(cursorImage));
+        ui->graphicsView->setCursor(cursor);
+    }
+    else
+        return;
 }
 
 void DistanceMeasurementForm::on_clearPushButton_clicked()
@@ -172,4 +230,14 @@ void DistanceMeasurementForm::on_originalPushButton_clicked()
 {
     ui->graphicsView->scale(1.0/zoom, 1.0/zoom);
     zoom = 1;
+}
+
+void DistanceMeasurementForm::on_distanceRadioButton_toggled(bool checked)
+{
+    if(checked) ui->graphicsView->setCursor(QCursor());
+}
+
+void DistanceMeasurementForm::on_areaRadioButton_toggled(bool checked)
+{
+    if(checked) setCursorImage(pensize);
 }

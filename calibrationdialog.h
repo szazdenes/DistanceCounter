@@ -12,7 +12,7 @@ class CalibrationDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit CalibrationDialog(QWidget *parent = 0, double pixels = 1);
+    explicit CalibrationDialog(QWidget *parent = nullptr, double pixels = 1);
     ~CalibrationDialog();
 
 signals:

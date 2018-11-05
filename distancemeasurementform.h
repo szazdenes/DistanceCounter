@@ -18,7 +18,7 @@ class DistanceMeasurementForm : public QWidget
     Q_OBJECT
 
 public:
-    explicit DistanceMeasurementForm(QWidget *parent = 0);
+    explicit DistanceMeasurementForm(QWidget *parent = nullptr);
     ~DistanceMeasurementForm();
 
 signals:
@@ -31,6 +31,8 @@ private slots:
     void slotMouseButtonPressed(QPointF pos);
     void slotMouseButtonReleased(QPointF pos);
     void slotSetCalibrationValue(double calib);
+    void slotWheelUp();
+    void slotWheelDown();
 
     void on_clearPushButton_clicked();
 
@@ -42,6 +44,10 @@ private slots:
 
     void on_originalPushButton_clicked();
 
+    void on_distanceRadioButton_toggled(bool checked);
+
+    void on_areaRadioButton_toggled(bool checked);
+
 private:
     Ui::DistanceMeasurementForm *ui;
 
@@ -52,11 +58,15 @@ private:
     double calibValue;
     bool calibration;
     double zoom;
+    double pensize;
+    QCursor cursor;
 
     void refreshMask();
     void refreshImage();
     void refreshLine(QPointF &startPos, QPointF &endPos);
+    void refreshArea(QPointF &pos);
     double calculateDistance(QPointF &startPos, QPointF &endPos);
+    void setCursorImage(double size);
 };
 
 #endif // DISTANCEMEASUREMENTFORM_H
