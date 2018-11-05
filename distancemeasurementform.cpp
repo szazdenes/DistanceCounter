@@ -123,6 +123,7 @@ void DistanceMeasurementForm::refreshImage()
     QPainter painter2(&loadImage);
 
     if(mousePressed){
+        painter.setOpacity(0.5);
         painter.drawImage(0, 0, loadImage);
         painter.drawImage(0, 0, mask);
         painter.end();
@@ -155,7 +156,7 @@ void DistanceMeasurementForm::refreshArea(QPointF &pos)
     brush.setColor(Qt::yellow);
     brush.setStyle(Qt::SolidPattern);
     painter.setCompositionMode(QPainter::CompositionMode_Source);
-    painter.setOpacity(0.5);
+//    painter.setOpacity(0.5);
     painter.setBrush(brush);
     painter.setPen(Qt::NoPen);
     painter.drawEllipse(pos.x() - pensize/zoom/2.0, pos.y() - pensize/zoom/2.0, pensize/zoom, pensize/zoom);
@@ -166,6 +167,19 @@ double DistanceMeasurementForm::calculateDistance(QPointF &startPos, QPointF &en
 {
     double result = calibValue * qSqrt((endPos.x()-startPos.x())*(endPos.x()-startPos.x())+(endPos.y()-startPos.y())*(endPos.y()-startPos.y()));
     return result;
+}
+
+double DistanceMeasurementForm::calculateArea(QImage &image)
+{
+    double area = 0;
+    for(int i = 0; i <= image.height(); i++){
+        for (int j = 0; j <= image.width(); j++){
+            if(image.pixelColor(i, j) == QColor(Qt::yellow))
+                area++;
+        }
+    }
+    area *= calibValue;
+    return area;
 }
 
 void DistanceMeasurementForm::setCursorImage(double size)
@@ -240,4 +254,10 @@ void DistanceMeasurementForm::on_distanceRadioButton_toggled(bool checked)
 void DistanceMeasurementForm::on_areaRadioButton_toggled(bool checked)
 {
     if(checked) setCursorImage(pensize);
+}
+
+void DistanceMeasurementForm::on_areaPushButton_clicked()
+{
+    double measuredArea = calculateArea(mask);
+    emit signalSendArea(measuredArea);
 }

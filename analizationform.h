@@ -16,11 +16,12 @@ class AnalizationForm : public QWidget
     Q_OBJECT
 
 public:
-    explicit AnalizationForm(QWidget *parent = 0);
+    explicit AnalizationForm(QWidget *parent = nullptr);
     ~AnalizationForm();
 
 public slots:
     void slotAddDistanceData(double data);
+    void slotAddAreaData(double area);
     void slotClearDistanceData();
 
 
@@ -40,6 +41,7 @@ private:
     void tableSetHeader();
 
     QList<double> distanceDataList;
+    QList<double> areaDataList;
 };
 
 #endif // ANALIZATIONFORM_H

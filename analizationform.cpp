@@ -8,6 +8,7 @@ AnalizationForm::AnalizationForm(QWidget *parent) :
     ui->setupUi(this);
 
     distanceDataList.clear();
+    areaDataList.clear();
     tableSetHeader();
 }
 
@@ -22,9 +23,27 @@ void AnalizationForm::slotAddDistanceData(double data)
     refreshTableWidget();
 }
 
+void AnalizationForm::slotAddAreaData(double area)
+{
+    areaDataList.append(area);
+    if(!areaDataList.isEmpty()){
+        ui->tableWidget->clear();
+        ui->tableWidget->setRowCount(0);
+        tableSetHeader();
+        foreach(double currentItem, distanceDataList){
+            ui->tableWidget->insertRow(ui->tableWidget->rowCount());
+            ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, 0, new QTableWidgetItem(QString::number(currentItem)));
+        }
+    }
+    else
+        return;
+
+}
+
 void AnalizationForm::slotClearDistanceData()
 {
     distanceDataList.clear();
+    areaDataList.clear();
     ui->tableWidget->clear();
     ui->tableWidget->setRowCount(0);
     tableSetHeader();
@@ -113,7 +132,7 @@ void AnalizationForm::exportTableData(QString exportFilename)
 void AnalizationForm::tableSetHeader()
 {
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    ui->tableWidget->setHorizontalHeaderLabels(QStringList() << "Distance (um)");
+    ui->tableWidget->setHorizontalHeaderLabels(QStringList() << "Distance (mm)/Area (mm2)");
 }
 
 void AnalizationForm::on_clearPushButton_clicked()

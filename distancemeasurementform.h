@@ -24,6 +24,7 @@ public:
 signals:
     void signalClearDistanceDataList();
     void signalSendDistance(double distance);
+    void signalSendArea(double area);
 
 private slots:
     void on_pushButton_clicked();
@@ -48,6 +49,8 @@ private slots:
 
     void on_areaRadioButton_toggled(bool checked);
 
+    void on_areaPushButton_clicked();
+
 private:
     Ui::DistanceMeasurementForm *ui;
 
@@ -66,6 +69,7 @@ private:
     void refreshLine(QPointF &startPos, QPointF &endPos);
     void refreshArea(QPointF &pos);
     double calculateDistance(QPointF &startPos, QPointF &endPos);
+    double calculateArea(QImage &image);
     void setCursorImage(double size);
 };
 
