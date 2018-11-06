@@ -38,7 +38,7 @@ DistanceMeasurementForm::~DistanceMeasurementForm()
 
 void DistanceMeasurementForm::on_pushButton_clicked()
 {
-    emit signalClearDistanceDataList();
+//    emit signalClearDistanceDataList();
     QString imagePath = QFileDialog::getOpenFileName(this, "Open image", "../");
     loadImage = QImage(imagePath);
     image = QImage(loadImage);

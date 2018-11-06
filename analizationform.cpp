@@ -101,7 +101,7 @@ void AnalizationForm::refreshTableWidget()
             ui->tableWidget->insertRow(ui->tableWidget->rowCount());
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, 0, new QTableWidgetItem(QString::number(currentItem)));
         }
-        calculateAveStD();
+//        calculateAveStD();
     }
     else
         return;
