@@ -30,7 +30,7 @@ void AnalizationForm::slotAddAreaData(double area)
         ui->tableWidget->clear();
         ui->tableWidget->setRowCount(0);
         tableSetHeader();
-        foreach(double currentItem, distanceDataList){
+        foreach(double currentItem, areaDataList){
             ui->tableWidget->insertRow(ui->tableWidget->rowCount());
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, 0, new QTableWidgetItem(QString::number(currentItem)));
         }
