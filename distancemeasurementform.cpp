@@ -178,7 +178,7 @@ double DistanceMeasurementForm::calculateArea(QImage &image)
                 area++;
         }
     }
-    area *= calibValue;
+    area *= (calibValue*calibValue);
     return area;
 }
 
